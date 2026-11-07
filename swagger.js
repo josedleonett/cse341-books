@@ -5,9 +5,9 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Books API',
+      title: 'Books and Authors API',
       version: '1.0.0',
-      description: 'A simple API for working with books',
+      description: 'An API for working with books and authors',
     },
     servers: [
       {
