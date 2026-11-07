@@ -23,6 +23,7 @@ MongoDB adds its own `_id`; routes use the course-required custom `id` value.
 | --- | --- | --- | --- |
 | `GET` | `/books` | `200`, JSON array of books | `500`, `{"message":"Internal server error"}` |
 | `GET` | `/books/:id` | `200`, matching book | `404`, `{"message":"Book not found"}`; unexpected errors return `500` with a safe message |
+| `GET` | `/api-docs` | Interactive Swagger UI for the API | N/A |
 
 `GET /` returns a JSON health message after the database connection succeeds.
 
@@ -36,8 +37,10 @@ MongoDB adds its own `_id`; routes use the course-required custom `id` value.
    collection. Insert at least three documents with string `id`, `author`,
    `title`, and ISO 8601 `publicationDate` values.
 5. Start the server with `npm run dev`.
-6. Try `http://127.0.0.1:3000/books`, `http://127.0.0.1:3000/books/b1`, and a
-   missing id such as `http://127.0.0.1:3000/books/missing`.
+6. Try `http://127.0.0.1:3000/api-docs` to inspect and exercise the documented
+   API routes. You can also try `http://127.0.0.1:3000/books`,
+   `http://127.0.0.1:3000/books/b1`, and a missing id such as
+   `http://127.0.0.1:3000/books/missing`.
 
 The server connects to MongoDB before it accepts requests. Local startup stops
 with a clear error if the database settings are missing or the database cannot
@@ -45,9 +48,10 @@ be reached.
 
 ## Validation
 
-Run `npm run lint` to check the JavaScript files. The Week 01 assignment also
-requires checking both routes against the Atlas data and, after deployment,
-against the Render URL.
+Run `npm run lint` to check the JavaScript files and `npm run swagger` to
+regenerate `swagger.json` after changing routes or their OpenAPI comments. The
+Week 01 assignment also requires checking both routes against the Atlas data
+and, after deployment, against the Render URL.
 
 ## Deployment
 
