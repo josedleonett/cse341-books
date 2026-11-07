@@ -6,14 +6,17 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --env-file=.env --watch server.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "swagger": "node swagger.js"
   },
   "dependencies": {
     "express": "^5.1.0",
-    "mongodb": "^6.17.0"
+    "mongodb": "^6.17.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.14.0"
+    "eslint": "^10.14.0",
+    "swagger-jsdoc": "6.2.8"
   }
 }
