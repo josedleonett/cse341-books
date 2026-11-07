@@ -1,9 +1,7 @@
 # CSE 341 Books Web Service
 
 Books and Authors API built with Node.js, Express, and the MongoDB Node.js
-driver. The Books API currently has its Week 01 read routes; its W02 write
-operations and author relationship are tracked separately in the assignment
-plan.
+driver. Books reference authors through each author's custom `id`.
 
 ## API contract
 
@@ -13,18 +11,22 @@ the required fields:
 ```json
 {
   "id": "b1",
-  "author": "Maya Rivera",
+  "authorId": "a1",
   "title": "Patterns of Light",
   "publicationDate": "2021-08-17"
 }
 ```
 
-MongoDB adds its own `_id`; routes use the course-required custom `id` value.
+The referenced author is stored in `cse341-books-db.authors`. MongoDB adds its
+own `_id`; routes and relationships use the course-required custom `id` value.
 
 | Method | Path | Success | Not found / error |
 | --- | --- | --- | --- |
 | `GET` | `/books` | `200`, JSON array of books | `500`, `{"message":"Internal server error"}` |
 | `GET` | `/books/:id` | `200`, matching book | `404`, `{"message":"Book not found"}`; unexpected errors return `500` with a safe message |
+| `POST` | `/books` | `201`, created book | `400` for invalid data, duplicate ID, or unknown author; unexpected errors return `500` |
+| `PUT` | `/books/:id` | `200`, updated book | `400` for invalid data or unknown author; `404` if no book matches; unexpected errors return `500` |
+| `DELETE` | `/books/:id` | `204`, no response body | `404` if no book matches; unexpected errors return `500` |
 | `GET` | `/api-docs` | Interactive Swagger UI for the API | N/A |
 
 `GET /` returns a JSON health message after the database connection succeeds.
@@ -52,9 +54,13 @@ Use `/api-docs` to inspect and exercise the documented author routes.
 2. Install project dependencies with `npm install`.
 3. Copy `.env.example` to `.env`, then set `MONGODB_URI` to your own Atlas
    connection string. Do not share or commit `.env`.
-4. In MongoDB Atlas, create the `cse341-books-db` database and `books`
-   collection. Insert at least three documents with string `id`, `author`,
-   `title`, and ISO 8601 `publicationDate` values.
+4. In MongoDB Atlas, create the `cse341-books-db` database and its `books` and
+   `authors` collections. Seed author documents with custom string `id`,
+   `name`, and nonzero integer `birthYear`. Seed book documents with custom
+   string `id`, an `authorId` matching an existing author, `title`, and
+   `publicationDate` formatted as `YYYY-MM-DD`. For existing Week 01 books,
+   add the matching `authorId` and remove the old `author` field before
+   verifying the new contract.
 5. Start the server with `npm run dev`.
 6. Try `http://127.0.0.1:3000/api-docs` to inspect and exercise the documented
    API routes. You can also try `http://127.0.0.1:3000/books`,
@@ -81,8 +87,11 @@ the deployed URL.
 
 ## Implementation decisions
 
-- The API looks up books by the custom `id` field (for example, `b1`) rather
-  than MongoDB's generated `_id`, as required by the Week 01 specification.
+- The API looks up books and authors by their custom `id` fields rather than
+  MongoDB's generated `_id`.
+- Book writes validate that `authorId` refers to an existing author.
+- Authors with books cannot be deleted; the API returns `409 Conflict` and
+  leaves both documents unchanged.
 - The database connection completes before Express begins listening, so the
   API does not accept requests when its required database is unavailable.
 - Controllers return safe JSON errors; database details are logged server-side
