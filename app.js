@@ -5,6 +5,7 @@ import router from './src/router.js';
 
 const app = express();
 
+app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 /**
@@ -23,5 +24,13 @@ app.get('/', (req, res) => {
 });
 
 app.use('/', router);
+
+app.use((error, req, res, next) => {
+  if (error.type === 'entity.parse.failed') {
+    return res.status(400).json({ message: 'Invalid JSON request body' });
+  }
+
+  return next(error);
+});
 
 export default app;

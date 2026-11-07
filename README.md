@@ -1,7 +1,9 @@
 # CSE 341 Books Web Service
 
-Week 01 read-only Books API built with Node.js, Express, and the MongoDB
-Node.js driver.
+Books and Authors API built with Node.js, Express, and the MongoDB Node.js
+driver. The Books API currently has its Week 01 read routes; its W02 write
+operations and author relationship are tracked separately in the assignment
+plan.
 
 ## API contract
 
@@ -26,6 +28,23 @@ MongoDB adds its own `_id`; routes use the course-required custom `id` value.
 | `GET` | `/api-docs` | Interactive Swagger UI for the API | N/A |
 
 `GET /` returns a JSON health message after the database connection succeeds.
+
+## Authors API
+
+Author documents are stored in the `authors` collection with a unique custom
+string `id`, a `name`, and a nonzero integer `birthYear`. Positive birth years
+represent CE; negative values represent BCE by absolute value. MongoDB's
+generated `_id` may appear in responses, but routes use the custom `id`.
+
+| Method | Path | Success | Not found / error |
+| --- | --- | --- | --- |
+| `GET` | `/authors` | `200`, JSON array of authors | `500`, safe JSON error |
+| `GET` | `/authors/:id` | `200`, matching author | `404`, `{"message":"Author not found"}`; unexpected errors return `500` |
+| `POST` | `/authors` | `201`, created author | `400` for invalid data or duplicate custom ID; unexpected errors return `500` |
+| `PUT` | `/authors/:id` | `200`, updated author | `400` for invalid data; `404` if no author matches; unexpected errors return `500` |
+| `DELETE` | `/authors/:id` | `204`, no response body | `404` if no author matches; `409` if books reference the author; unexpected errors return `500` |
+
+Use `/api-docs` to inspect and exercise the documented author routes.
 
 ## Local setup
 
