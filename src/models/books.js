@@ -25,7 +25,10 @@ const createBook = async (book) => {
 const updateBook = async (id, book) => {
   const db = getDb();
   const collection = db.collection('books');
-  const result = await collection.updateOne({ id }, { $set: book });
+  const result = await collection.updateOne(
+    { id },
+    { $set: book, $unset: { author: '' } },
+  );
 
   if (result.matchedCount === 0) {
     return null;

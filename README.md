@@ -58,9 +58,9 @@ Use `/api-docs` to inspect and exercise the documented author routes.
    `authors` collections. Seed author documents with custom string `id`,
    `name`, and nonzero integer `birthYear`. Seed book documents with custom
    string `id`, an `authorId` matching an existing author, `title`, and
-   `publicationDate` formatted as `YYYY-MM-DD`. For existing Week 01 books,
-   add the matching `authorId` and remove the old `author` field before
-   verifying the new contract.
+   `publicationDate` formatted as `YYYY-MM-DD`. Migrate existing Week 01
+   books by calling `PUT /books/:id` with their matching `authorId`; this
+   removes the legacy `author` name field as part of the update.
 5. Start the server with `npm run dev`.
 6. Try `http://127.0.0.1:3000/api-docs` to inspect and exercise the documented
    API routes. You can also try `http://127.0.0.1:3000/books`,
